@@ -1,8 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      0.3
-// @updateURL    https://raw.githubusercontent.com/izhulei/userjs/master/user.delivery.js
+// @version      0.5
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -18,13 +17,6 @@
     $(function(){
 
         if (unsafeWindow.appCode == "PLATFORM") {
-
-            //注入导出订单按钮
-            /*var exportDiv="";
-            exportDiv += '<a class="btn btn-small fun-a" id="ImportAndSend" href="javascript:void(0)" onclick="importDialog();" style="color: #de533c;margin-top: 4px;">';
-            exportDiv += '<i class="icon-turn-gray"/>导出待发货订单';
-            exportDiv += '</a>';
-            $("#status").children("ul").append(exportDiv);*/
 
             //注入导入文件按钮
             var importDiv="";
@@ -108,123 +100,135 @@
     //导入发货
     unsafeWindow.importDelivery = function(){
 
-        $('#btnImportSubmit').attr('disabled',"true");
-
-        //发货
-        submitDelivery("申通",csvFiles);
-        submitDelivery("邮政",csvFiles);
-
-    };
-
-    //提交发货信息
-    unsafeWindow.submitDelivery = function(delivery,csvFile){
-
-        var orderSendList = $.parseJSON('{"OrderSendLists":[{"OrderNumber":null,"ParcelNo":null}],"ExpressCode":null,"ExpressName":null,"ExpressID":null,"User":null}');
-        //克隆
-        var newList = clone(orderSendList);
-        //调用克隆的方法
-        newList.OrderSendLists = new Array();
-
-        if(delivery === "申通"){
-            newList.ExpressID = "45";
-            newList.ExpressCode = "STO";
-            newList.ExpressName = "申通快递";
-        }else if(delivery === "邮政"){
-            newList.ExpressID = "25";
-            newList.ExpressCode = "EMS";
-            newList.ExpressName = "EMS 邮政快递";
-        }else{
+        //console.log(csvFiles);
+        if(csvFiles == ""){
+            alert('请上传CSV文件!');
             return;
         }
 
-        for(var o in csvFile){
+        $('#importDialogDiv').modal('hide');
 
-            var orderNumber = csvFile[o].订单编号;
-            var parcelNo = csvFile[o].物流单号;
-            var expressName = csvFile[o].物流公司;
+        //发货
+        var orderSendList = $.parseJSON('{"OrderSendLists":[{"OrderNumber":null,"ParcelNo":null}],"ExpressCode":null,"ExpressName":null,"ExpressID":null,"User":null}');
+        //克隆
+        var newList1 = clone(orderSendList);
+        var newList2 = clone(orderSendList);
+        //调用克隆的方法
+        newList1.OrderSendLists = new Array();
+        newList2.OrderSendLists = new Array();
+
+        newList1.ExpressID = "45";
+        newList1.ExpressCode = "STO";
+        newList1.ExpressName = "申通快递";
+
+        newList2.ExpressID = "25";
+        newList2.ExpressCode = "EMS";
+        newList2.ExpressName = "EMS 邮政快递";
+
+        for(var o in csvFiles){
+            var orderNumber = csvFiles[o].订单编号;
+            var expressName = csvFiles[o].物流公司;
+            var parcelNo = csvFiles[o].物流单号;
+            orderNumber = orderNumber.toString().replace(/^\s+|\s+$/g,"");
             expressName = expressName.toString().replace(/^\s+|\s+$/g,"");
+            parcelNo = parcelNo.toString().replace(/^\s+|\s+$/g,"");
 
             if(expressName == "" || expressName == "物流公司" || orderNumber == "" || parcelNo == ""){
                 continue;
             }
-            if(expressName.indexOf(delivery) != -1){
 
-                var newListChildren = clone(orderSendList.OrderSendLists[0]);
+            var newListChildren = clone(orderSendList.OrderSendLists[0]);
+            newListChildren.OrderNumber = orderNumber;
+            newListChildren.ParcelNo = parcelNo;
 
-                newListChildren.OrderNumber = orderNumber.toString().replace(/^\s+|\s+$/g,"");
-                newListChildren.ParcelNo = parcelNo.toString().replace(/^\s+|\s+$/g,"");
-
-                newList.OrderSendLists.push(newListChildren);
-
+            if(expressName.indexOf("申通") != -1){
+                newList1.OrderSendLists.push(newListChildren);
+            }else if(expressName.indexOf("邮政") != -1){
+                newList2.OrderSendLists.push(newListChildren);
             }
             else{
                 continue;
             }
-
         }
+
+        //console.log(newList1);
+        //console.log(newList2);
 
         //提交数据
-        if(newList.OrderSendLists.length > 0){
+        if(newList1.OrderSendLists.length > 0){
 
-            $.ajax({
-                type: "post",
-                url: "../../OrderForm/BatchSaveCourier",
-                data: { "SaveCourier": JSON.stringify(newList) },
-                dataType: "json",
-                async: false, // 让它同步执行
-                success: function (jsonRes) {
-                    if (jsonRes.Code == null && jsonRes.Message == null) {
-                        //console.log("111--" + jsonRes);
-                        if (jsonRes == "-3") {
-                            importShow(delivery + "导入发货失败", "error");
-                            $('#importDialogDiv').modal('hide');
-                            return;
-                        }else{
-                            $.ajax({
-                                type: "post",
-                                url: "../../OrderForm/MarkDelivery",
-                                data: { "batchSend": JSON.stringify(newList) },
-                                dataType: "json",
-                                async: false, // 让它同步执行
-                                success: function (jsonRes) {
-                                    //console.log("222--" + jsonRes);
-                                    //$("#btnSubmit").removeClass("disabled").attr("disabled", false);
-                                    //$("#btnSubmitprint").removeClass("disabled").attr("disabled", false);
-                                    if (jsonRes.Code == null && jsonRes.Message == null) {
-                                        if (jsonRes == "-1") {
-                                            importShow(delivery + "导入发货成功", "success");
-                                            $('#importDialogDiv').modal('hide');
-                                            OrderView(1);
-                                        } else {
-                                            importShow(delivery + "导入发货失败", "error");
-                                            $('#importDialogDiv').modal('hide');
-                                            return;
-
-                                        }
-                                    }
-                                    else {
-                                        importShow(jsonRes.Message, "error");
-                                        $('#importDialogDiv').modal('hide');
-                                        return;
-                                    }
-                                }
-                            });
-                        }
-                    }
-                    else {
-                        Show(jsonRes.Message, "error");
-                        $('#importDialogDiv').modal('hide');
-                        return;
-                    }
-                }
-            });
+            submitDelivery("申通",newList1);
 
         }else {
-            importShow(delivery + "没有发货信息", "error");
-            $('#importDialogDiv').modal('hide');
-            return;
+            importShow("申通没有发货信息", "error");
         }
 
+        if(newList2.OrderSendLists.length > 0){
+
+            submitDelivery("邮政",newList2);
+
+        }else {
+            importShow(delivery + "邮政没有发货信息", "error");
+        }
+    };
+
+    //提交发货信息
+    unsafeWindow.submitDelivery = function(delivery,newList){
+
+        var importd = dialog({content: '数据导入中......'}).show();
+
+        $.ajax({
+            type: "post",
+            url: "../../OrderForm/BatchSaveCourier",
+            data: { "SaveCourier": JSON.stringify(newList) },
+            dataType: "json",
+            //async: false, // 让它同步执行
+            success: function (jsonRes) {
+                if (jsonRes.Code == null && jsonRes.Message == null) {
+                    //console.log("111--" + jsonRes);
+                    if (jsonRes == "-3") {
+                        importShow(delivery + "导入发货失败", "error");
+                        importd.close().remove();
+                        return false;
+                    }else{
+                        $.ajax({
+                            type: "post",
+                            url: "../../OrderForm/MarkDelivery",
+                            data: { "batchSend": JSON.stringify(newList) },
+                            dataType: "json",
+                            //async: false, // 让它同步执行
+                            success: function (jsonRes) {
+                                //console.log("000--" + jsonRes);
+                                if (jsonRes.Code == null && jsonRes.Message == null) {
+                                    if (jsonRes == "-1") {
+                                        importShow(delivery + "导入发货成功", "success");
+                                        importd.close().remove();
+                                        //重新加载列表
+                                        OrderView(1);
+                                        return true;
+                                    } else {
+                                        importShow(delivery + "导入发货失败", "error");
+                                        importd.close().remove();
+                                        return false;
+
+                                    }
+                                }
+                                else {
+                                    importShow(delivery + jsonRes.Message, "error");
+                                    importd.close().remove();
+                                    return false;
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    importShow(delivery + jsonRes.Message, "error");
+                    importd.close().remove();
+                    return false;
+                }
+            }
+        });
 
     };
 
