@@ -2,6 +2,7 @@
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
 // @version      0.3
+// @updateURL    https://raw.githubusercontent.com/izhulei/userjs/master/user.delivery.js
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -99,6 +100,7 @@
             var fileString = evt.target.result;
             csvFiles = new CSV(fileString, {header: ['行号','订单编号','商品编号','商品名称','买家账号','买家姓名','身份证号','支付单号','商品简名','SKU编号','类型','处理状态','产地','规格','型号','商品备注','供货信息','仓库','单位','数量','订单单价(商品)','订单金额(商品)','订单金额(订单)','退货数量','退货金额','商城扣费','是否需要发票','开票状态','发票抬头','纳税人识别号','发货时间','下载时间','付款时间','拍下时间','网店名称','收货地址','收货人联系方式','物流公司','物流单号','业务员','发货员','配货员','商品重量(kg)','买家运费','买家应付','商品运费','导入重量(kg)','导入运费','卖家备注','买家留言']}).parse();
             //csvFiles = new CSV(fileString, {header: true}).parse();
+            //console.log(csvFiles);
         };
     };
 
@@ -139,12 +141,13 @@
 
             var orderNumber = csvFile[o].订单编号;
             var parcelNo = csvFile[o].物流单号;
+            var expressName = csvFile[o].物流公司;
+            expressName = expressName.toString().replace(/^\s+|\s+$/g,"");
 
-
-            if(csvFile[o].物流公司 === "" || csvFile[o].物流公司 === "物流公司" || csvFile[o].物流单号 == "" || csvFile[o].订单编号 == ""){
+            if(expressName == "" || expressName == "物流公司" || orderNumber == "" || parcelNo == ""){
                 continue;
             }
-            if(csvFile[o].物流公司.indexOf(delivery) != -1){
+            if(expressName.indexOf(delivery) != -1){
 
                 var newListChildren = clone(orderSendList.OrderSendLists[0]);
 
