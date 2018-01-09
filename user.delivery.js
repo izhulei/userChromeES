@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      0.2
+// @version      0.3
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -141,7 +141,7 @@
             var parcelNo = csvFile[o].物流单号;
 
 
-            if(csvFile[o].物流公司 === "" || csvFile[o].物流公司 === "物流公司"){
+            if(csvFile[o].物流公司 === "" || csvFile[o].物流公司 === "物流公司" || csvFile[o].物流单号 == "" || csvFile[o].订单编号 == ""){
                 continue;
             }
             if(csvFile[o].物流公司.indexOf(delivery) != -1){
