@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         微店导入发货
-// @namespace    http://www.zhulei.me/
+// @namespace    https://github.com/izhulei/userjs
 // @version      0.2
 // @updateUR     https://raw.githubusercontent.com/izhulei/userjs/master/user.delivery.js
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
