@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      0.5
+// @version      0.6
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -20,10 +20,10 @@
 
             //注入导入文件按钮
             var importDiv="";
-            importDiv += '<a class="btn btn-small fun-a" id="ImportAndSend" href="javascript:void(0)" onclick="importDialog();" style="color: #de533c;margin-top: 4px;">';
+            importDiv += '<a class="btn btn-small fun-a" id="ImportAndSend" href="javascript:void(0)" onclick="importDialog();" style="color: #de533c;">';
             importDiv += '<i class="icon-turn-gray"/>导入物流信息';
             importDiv += '</a>';
-            $("#status").children("ul").append(importDiv);
+            $("#myTabContent").find("div[class='con style0list']").append(importDiv);
 
             //注入消息弹层
             var alertDiv = "";
