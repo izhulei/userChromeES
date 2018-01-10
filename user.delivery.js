@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      0.8
+// @version      0.9
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -134,6 +134,7 @@
             expressName = expressName.toString().replace(/^\s+|\s+$/g,"");
             parcelNo = parcelNo.toString().replace(/^\s+|\s+$/g,"");
 
+            //判断没有物流公司或者物流单号不处理，并过滤第一行头部数据
             if(expressName == "" || expressName == "物流公司" || orderNumber == "" || parcelNo == ""){
                 continue;
             }
@@ -142,6 +143,12 @@
             newListChildren.OrderNumber = orderNumber;
             newListChildren.ParcelNo = parcelNo;
 
+            //判断重复订单数据不处理
+            if((JSON.stringify(newList1.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList2.OrderSendLists)).indexOf(orderNumber) != -1){
+                continue;
+            }
+
+            //判断物流公司放在不同的数组中
             if(expressName.indexOf("申通") != -1){
                 newList1.OrderSendLists.push(newListChildren);
             }else if(expressName.indexOf("邮政") != -1){
