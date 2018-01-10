@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      0.7
+// @version      0.8
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -169,7 +169,7 @@
             submitDelivery("邮政",newList2);
 
         }else {
-            importShow(delivery + "邮政没有发货信息", "error");
+            importShow("邮政没有发货信息", "error");
         }
     };
 
