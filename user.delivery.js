@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      0.9
+// @version      1.0
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -67,7 +67,7 @@
         dialogDiv += '</div>';
         dialogDiv += '<div class="modal-footer">';
         dialogDiv += '<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>';
-        dialogDiv += '<button class="btn btn-info" id="btnImportSubmit" onclick="importDelivery();" id="">导入</button>';
+        dialogDiv += '<button class="btn btn-info" id="btnImportSubmit" disabled = “true” onclick="importDelivery();" id="">导入</button>';
         dialogDiv += '</div>';
         dialogDiv += '</div>';
 
@@ -91,8 +91,30 @@
         reader.readAsText(files[0], "gbk");//读取文件
         reader.onload = function(evt){ //读取完文件之后会回来这里
             var fileString = evt.target.result;
-            csvFiles = new CSV(fileString, {header: ['行号','订单编号','商品编号','商品名称','买家账号','买家姓名','身份证号','支付单号','商品简名','SKU编号','类型','处理状态','产地','规格','型号','商品备注','供货信息','仓库','单位','数量','订单单价(商品)','订单金额(商品)','订单金额(订单)','退货数量','退货金额','商城扣费','是否需要发票','开票状态','发票抬头','纳税人识别号','发货时间','下载时间','付款时间','拍下时间','网店名称','收货地址','收货人联系方式','物流公司','物流单号','业务员','发货员','配货员','商品重量(kg)','买家运费','买家应付','商品运费','导入重量(kg)','导入运费','卖家备注','买家留言']}).parse();
-            //csvFiles = new CSV(fileString, {header: true}).parse();
+            var sheader = "";
+
+            new CSV(fileString).forEach(function(line) {
+                if(line.indexOf("订单编号") != -1){
+                    sheader = line;
+                    //console.log(sheader);
+                    return;
+                }
+            });
+
+            if(sheader == ""){
+                alert('请检查CSV文件格式!');
+            }
+
+            csvFiles = new CSV(fileString, {header: sheader}).parse();
+
+            if(csvFiles == ""){
+                alert('请上传CSV文件!');
+                return;
+            }
+
+            //导入按钮可用
+            $("#btnImportSubmit").removeClass("disabled").attr("disabled", false);
+
             //console.log(csvFiles);
         };
     };
@@ -192,10 +214,11 @@
             dataType: "json",
             //async: false, // 让它同步执行
             success: function (jsonRes) {
+                //console.log("222--" + jsonRes.Message);
                 if (jsonRes.Code == null && jsonRes.Message == null) {
                     //console.log("111--" + jsonRes);
                     if (jsonRes == "-3") {
-                        importShow(delivery + "导入发货失败", "error");
+                        importShow(delivery + "-" + "导入发货失败", "error");
                         importd.close().remove();
                         return false;
                     }else{
@@ -209,20 +232,20 @@
                                 //console.log("000--" + jsonRes);
                                 if (jsonRes.Code == null && jsonRes.Message == null) {
                                     if (jsonRes == "-1") {
-                                        importShow(delivery + "导入发货成功", "success");
+                                        importShow(delivery + "-" + "导入发货成功", "success");
                                         importd.close().remove();
                                         //重新加载列表
                                         OrderView(1);
                                         return true;
                                     } else {
-                                        importShow(delivery + "导入发货失败", "error");
+                                        importShow(delivery + "-" + "导入发货失败", "error");
                                         importd.close().remove();
                                         return false;
 
                                     }
                                 }
                                 else {
-                                    importShow(delivery + jsonRes.Message, "error");
+                                    importShow(delivery + "-" + jsonRes.Message + "-请检查订单号是否有错误", "error");
                                     importd.close().remove();
                                     return false;
                                 }
@@ -231,7 +254,7 @@
                     }
                 }
                 else {
-                    importShow(delivery + jsonRes.Message, "error");
+                    importShow(delivery + "-" + jsonRes.Message + "-请检查订单号是否有错误", "error");
                     importd.close().remove();
                     return false;
                 }
