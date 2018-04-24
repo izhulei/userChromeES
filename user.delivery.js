@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      1.3
+// @version      1.4
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -144,7 +144,7 @@
 
         newList1.ExpressID = "45";
         newList1.ExpressCode = "STO";
-        newList1.ExpressName = "申通快递";
+        newList1.ExpressName = "申通e物流";
 
         newList2.ExpressID = "25";
         newList2.ExpressCode = "POSTB";
@@ -152,7 +152,7 @@
 
         newList3.ExpressID = "76";
         newList3.ExpressCode = "YTO";
-        newList3.ExpressName = "圆通快递";
+        newList3.ExpressName = "圆通速递";
 
         for(var o in csvFiles){
             var orderNumber = csvFiles[o].订单编号;
