@@ -136,17 +136,23 @@
         //克隆
         var newList1 = clone(orderSendList);
         var newList2 = clone(orderSendList);
+        var newList3 = clone(orderSendList);
         //调用克隆的方法
         newList1.OrderSendLists = new Array();
         newList2.OrderSendLists = new Array();
+        newList3.OrderSendLists = new Array();
 
         newList1.ExpressID = "45";
         newList1.ExpressCode = "STO";
         newList1.ExpressName = "申通快递";
 
         newList2.ExpressID = "25";
-        newList2.ExpressCode = "EMS";
-        newList2.ExpressName = "EMS 邮政快递";
+        newList2.ExpressCode = "POSTB";
+        newList2.ExpressName = "邮政国内小包";
+        
+        newList3.ExpressID = "76";
+        newList3.ExpressCode = "YTO";
+        newList3.ExpressName = "圆通快递";
 
         for(var o in csvFiles){
             var orderNumber = csvFiles[o].订单编号;
@@ -166,7 +172,7 @@
             newListChildren.ParcelNo = parcelNo;
 
             //判断重复订单数据不处理
-            if((JSON.stringify(newList1.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList2.OrderSendLists)).indexOf(orderNumber) != -1){
+            if((JSON.stringify(newList1.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList2.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList3.OrderSendLists)).indexOf(orderNumber) != -1){
                 continue;
             }
 
@@ -175,6 +181,9 @@
                 newList1.OrderSendLists.push(newListChildren);
             }else if(expressName.indexOf("邮政") != -1){
                 newList2.OrderSendLists.push(newListChildren);
+            }
+            }else if(expressName.indexOf("圆通") != -1){
+                newList3.OrderSendLists.push(newListChildren);
             }
             else{
                 continue;
@@ -200,6 +209,15 @@
         }else {
             importShow("邮政没有发货信息", "error");
         }
+    
+        if(newList3.OrderSendLists.length > 0){
+
+            submitDelivery("圆通",newList3);
+
+        }else {
+            importShow("圆通没有发货信息", "error");
+        }
+
     };
 
     //提交发货信息
