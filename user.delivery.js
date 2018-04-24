@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      1.2
+// @version      1.3
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -149,7 +149,7 @@
         newList2.ExpressID = "25";
         newList2.ExpressCode = "POSTB";
         newList2.ExpressName = "邮政国内小包";
-        
+
         newList3.ExpressID = "76";
         newList3.ExpressCode = "YTO";
         newList3.ExpressName = "圆通快递";
@@ -181,7 +181,6 @@
                 newList1.OrderSendLists.push(newListChildren);
             }else if(expressName.indexOf("邮政") != -1){
                 newList2.OrderSendLists.push(newListChildren);
-            }
             }else if(expressName.indexOf("圆通") != -1){
                 newList3.OrderSendLists.push(newListChildren);
             }
@@ -195,25 +194,19 @@
 
         //提交数据
         if(newList1.OrderSendLists.length > 0){
-
             submitDelivery("申通",newList1);
-
         }else {
             importShow("申通没有发货信息", "error");
         }
 
         if(newList2.OrderSendLists.length > 0){
-
             submitDelivery("邮政",newList2);
-
         }else {
             importShow("邮政没有发货信息", "error");
         }
     
         if(newList3.OrderSendLists.length > 0){
-
             submitDelivery("圆通",newList3);
-
         }else {
             importShow("圆通没有发货信息", "error");
         }
