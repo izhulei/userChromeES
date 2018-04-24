@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      1.4
+// @version      1.5
 // @description  https://github.com/knrz/CSV.js使用了CSV处理js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
