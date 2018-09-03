@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
  // @namespace   https://github.com/izhulei/userjs
-// @version      2.0
+// @version      2.1
 // @description  https://github.com/knrz/CSV.js 使用了 CSV 处理 js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -102,7 +102,7 @@
 
         dialogDiv += '<div class="modal-header">';
         dialogDiv += '<button type="button" class="close" data-dismiss="modal" aria-hidden="true"> ×</button>';
-        dialogDiv += '<h3 id="H6"> 导入 CSV 文件 </h3>';
+        dialogDiv += '<h3 id="H6"> 导入 Excel 文件 </h3>';
         dialogDiv += '</div>';
 
         dialogDiv += '<div class="modal-body">';
@@ -201,7 +201,7 @@
             //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
             //wb.Sheets[Sheet名]获取第一个Sheet的数据
             excelData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-            console.log(excelData);
+            //console.log(excelData);
 
             //document.getElementById("demo").innerHTML = JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
             $("#btnImportSubmit").removeClass("disabled").attr("disabled", false);
@@ -244,11 +244,10 @@
         var isRun = false;
 
         for(var item in excelData){
-
             if(isRun){
                 var orderNumber = excelData[item]. __EMPTY;
                 var expressName = excelData[item].__EMPTY_5;
-                var parcelNo = excelData[item].__EMPTY_6;
+                var parcelNo = excelData[item].__EMPTY_8;
                 orderNumber = orderNumber.toString().replace(/^\s+|\s+$/g,"");
                 expressName = expressName.toString().replace(/^\s+|\s+$/g,"");
                 parcelNo = parcelNo.toString().replace(/^\s+|\s+$/g,"");
