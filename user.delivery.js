@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         微店导入发货
-// @namespace    https://github.com/izhulei/userjs
-// @version      2.1
-// @description  https://github.com/knrz/CSV.js,https://github.com/SheetJS/js-xlsx 使用了SheetJS与CVS处理数据
+// @namespace
+// @version      2.3
+// @description  https://github.com/knrz/CSV.js 使用了 CSV 处理 js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
 // @require      https://raw.githubusercontent.com/izhulei/userjs/master/csv.min.js
@@ -220,14 +220,20 @@
 
         // 发货
         var orderSendList = $.parseJSON('{"OrderSendLists":[{"OrderNumber":null,"ParcelNo":null}],"ExpressCode":null,"ExpressName":null,"ExpressID":null,"User":null}');
-        // 克隆
+
+        //打印克隆
+        var newList = clone(orderSendList);
+        // 发货克隆
         var newList1 = clone(orderSendList);
         var newList2 = clone(orderSendList);
         var newList3 = clone(orderSendList);
+        var newList4 = clone(orderSendList);
         // 调用克隆的方法
+        newList.OrderSendLists = new Array();
         newList1.OrderSendLists = new Array();
         newList2.OrderSendLists = new Array();
         newList3.OrderSendLists = new Array();
+        newList4.OrderSendLists = new Array();
 
         newList1.ExpressID = "45";
         newList1.ExpressCode = "STO";
@@ -241,10 +247,17 @@
         newList3.ExpressCode = "YTO";
         newList3.ExpressName = " 圆通速递 ";
 
+        newList4.ExpressID = "77";
+        newList4.ExpressCode = "YDKY";
+        newList4.ExpressName = "韵达快递";
+
         var isRun = false;
+
+        //console.log(excelData);
 
         for(var item in excelData){
             if(isRun){
+                //console.log(excelData[item]);
                 var orderNumber = excelData[item]. __EMPTY;
                 var expressName = excelData[item].__EMPTY_5;
                 var parcelNo = excelData[item].__EMPTY_8;
@@ -257,7 +270,7 @@
                 newListChildren.ParcelNo = parcelNo;
 
                 // 判断重复订单数据不处理
-                if((JSON.stringify(newList1.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList2.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList3.OrderSendLists)).indexOf(orderNumber) != -1){
+                if((JSON.stringify(newList1.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList2.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList3.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList4.OrderSendLists)).indexOf(orderNumber) != -1){
                     continue;
                 }
 
@@ -268,6 +281,8 @@
                     newList2.OrderSendLists.push(newListChildren);
                 }else if(expressName.indexOf("圆通") != -1){
                     newList3.OrderSendLists.push(newListChildren);
+                }else if(expressName.indexOf("韵达") != -1){
+                    newList4.OrderSendLists.push(newListChildren);
                 }
                 else{
                     continue;
@@ -280,9 +295,10 @@
             }
         }
 
-        console.log(newList1);
+        /*console.log(newList1);
         console.log(newList2);
         console.log(newList3);
+        console.log(newList4);*/
 
         // 提交数据
         if(newList1.OrderSendLists.length > 0){
@@ -303,6 +319,12 @@
             importShow("圆通没有发货信息", "error");
         }
 
+         if(newList4.OrderSendLists.length > 0){
+            submitDelivery("韵达",newList4);
+        }else {
+            importShow("韵达没有发货信息", "error");
+        }
+
     };
 
     // 提交发货信息
@@ -315,9 +337,9 @@
             url: "../../OrderForm/BatchSaveCourier",
             data: { "SaveCourier": JSON.stringify(newList) },
             dataType: "json",
-            //async: false, // 让它同步执行
-             success: function (jsonRes) {
-                //console.log("222--" + jsonRes.Message);
+            async: false, // 让它同步执行
+            success: function (jsonRes) {
+                //console.log("222--" + jsonRes);
                 if (jsonRes.Code == null && jsonRes.Message == null) {
                     //console.log("111--" + jsonRes);
                     if (jsonRes == "-3") {
