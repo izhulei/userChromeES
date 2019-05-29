@@ -15,6 +15,59 @@
 
     //Excel文件数据存储
     var excelData = "";
+    
+    //移除onclick事件
+    $("#btnSubmit").removeAttr("onclick");
+
+    //添加onclick事件
+    $("#btnSubmit").click(function(){
+
+        //解决发货单号为空问题
+        var list = $("input[name='sub']:checked");
+        var paddleft = $("#txtLogistics").val().replace(/[^0-9]/ig, "");
+        var num = parseInt(paddleft);
+        if ($("#txtLogistics").val() != "") {
+            for (var i = 0; i < list.length; i++) {
+                var a = parseInt(num + i);
+                if ($("[name=txtLogisticsClone" + i + "]").val() == "") {
+                    $("[name=txtLogisticsClone" + i + "]").val(a);
+                }
+            }
+        }
+
+        if ($("#selLogistics").val() == "0") {
+                $("#selLogistics").parent().next().children("span").text("请选择物流");
+                $("#selLogistics").focus();
+                $("#btnSubmit").removeClass("disabled").attr("disabled", false);
+                return;
+        }
+        if ($("[name=txtLogisticsClone0]").val() == "") {
+            $("[name=txtLogisticsClone0]").parent().next().children("span").text("请填写运单编号");
+            $("[name=txtLogisticsClone0]").focus();
+            $("#btnSubmit").removeClass("disabled").attr("disabled", false);
+            return;
+        }
+
+        var orderNumber = $("#Orderslists").find(".help-block").html();
+        var RevDelivery = $("#selLogistics").val();
+        var RevPostTicket = $("[name=txtLogisticsClone0]").val();
+
+        $.ajax({
+            async: false,
+            type: "Post",
+            url: "../../OrderForm/OrderSend",
+            data: { "orderNumber": orderNumber, "RevDelivery": RevDelivery, "RevPostTicket": RevPostTicket },
+            success: function (responseData) {
+
+                if (responseData == "1") {
+                    Show("发货成功！", "success");
+                    location.reload();
+                } else {
+                    Show("发货失败", "prompt");
+                }
+            }
+        });
+    });
 
     $(function(){
 
