@@ -2,7 +2,7 @@
 // @name         微店导入发货
 // @namespace
 // @version      2.4
-// @updateURL
+// @updateURL    https://raw.githubusercontent.com/izhulei/userjs/master/user.delivery.zp.js
 // @description  https://github.com/knrz/CSV.js 使用了 CSV 处理 js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
