@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace
-// @version      2.6
+// @version      2.5
 // @updateURL    https://raw.githubusercontent.com/izhulei/userjs/master/user.delivery.wc.js
 // @description  https://github.com/knrz/CSV.js 使用了 CSV 处理 js
 // @author       zhulei
