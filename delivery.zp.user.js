@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      2.5
+// @version      2.6
 // @updateURL    https://raw.githubusercontent.com/izhulei/userjs/master/delivery.zp.user.js
 // @description  https://github.com/knrz/CSV.js 使用了 CSV 处理 js
 // @author       zhulei
@@ -20,7 +20,7 @@
     //移除onclick事件
     $("#btnSubmit").removeAttr("onclick");
 
-    //添加onclick事件
+    //发货按钮添加onclick事件
     $("#btnSubmit").click(function(){
 
         //解决发货单号为空问题
@@ -70,6 +70,7 @@
         });
     });
 
+    //注入批量文件发货按钮
     $(function(){
 
         //导出待发货订单按钮
