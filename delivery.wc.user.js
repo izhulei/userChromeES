@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      2.5
+// @version      2.6
 // @updateURL    https://raw.githubusercontent.com/izhulei/userjs/master/delivery.wc.user.js
 // @description  https://github.com/knrz/CSV.js 使用了 CSV 处理 js
 // @author       zhulei
@@ -309,8 +309,8 @@
             if(isRun){
                 //console.log(excelData[item]);
                 var orderNumber = excelData[item]. __EMPTY;
-                var expressName = excelData[item].__EMPTY_8;
-                var parcelNo = excelData[item].__EMPTY_9;
+                var expressName = excelData[item].__EMPTY_6;
+                var parcelNo = excelData[item].__EMPTY_7;
                 orderNumber = orderNumber.toString().replace(/^\s+|\s+$/g,"");
                 expressName = expressName.toString().replace(/^\s+|\s+$/g,"");
                 parcelNo = parcelNo.toString().replace(/^\s+|\s+$/g,"");
