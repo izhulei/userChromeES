@@ -308,9 +308,9 @@
         for(var item in excelData){
             if(isRun){
                 //console.log(excelData[item]);
-                var orderNumber = excelData[item]. __EMPTY;
-                var expressName = excelData[item].__EMPTY_6;
-                var parcelNo = excelData[item].__EMPTY_7;
+                var orderNumber = excelData[item].__EMPTY_1;
+                var expressName = excelData[item].__EMPTY_3;
+                var parcelNo = excelData[item].__EMPTY_4;
                 orderNumber = orderNumber.toString().replace(/^\s+|\s+$/g,"");
                 expressName = expressName.toString().replace(/^\s+|\s+$/g,"");
                 parcelNo = parcelNo.toString().replace(/^\s+|\s+$/g,"");
