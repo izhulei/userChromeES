@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         微店导入发货
 // @namespace    https://github.com/izhulei/userjs
-// @version      2.6
-// @updateURL    https://raw.githubusercontent.com/izhulei/userjs/master/delivery.zp.user.js
+// @version      2.8
+// @updateURL
 // @description  https://github.com/knrz/CSV.js 使用了 CSV 处理 js
 // @author       zhulei
 // @match        http://10522mcm.web08.com.cn/OrderForm/NewOrderList*
@@ -14,17 +14,17 @@
 (function() {
     'use strict';
 
-    //Excel文件数据存储
-    var excelData = "";
-    
-    //移除onclick事件
-    $("#btnSubmit").removeAttr("onclick");
+    //Excel 文件数据存储
+     var excelData = "";
 
-    //发货按钮添加onclick事件
-    $("#btnSubmit").click(function(){
+    // 移除 onclick 事件
+     $("#btnSubmit").removeAttr("onclick");
 
-        //解决发货单号为空问题
-        var list = $("input[name='sub']:checked");
+    // 添加 onclick 事件
+     $("#btnSubmit").click(function(){
+
+        // 解决发货单号为空问题
+         var list = $("input[name='sub']:checked");
         var paddleft = $("#txtLogistics").val().replace(/[^0-9]/ig, "");
         var num = parseInt(paddleft);
         if ($("#txtLogistics").val() != "") {
@@ -37,13 +37,13 @@
         }
 
         if ($("#selLogistics").val() == "0") {
-                $("#selLogistics").parent().next().children("span").text("请选择物流");
+                $("#selLogistics").parent().next().children("span").text(" 请选择物流 ");
                 $("#selLogistics").focus();
                 $("#btnSubmit").removeClass("disabled").attr("disabled", false);
                 return;
         }
         if ($("[name=txtLogisticsClone0]").val() == "") {
-            $("[name=txtLogisticsClone0]").parent().next().children("span").text("请填写运单编号");
+            $("[name=txtLogisticsClone0]").parent().next().children("span").text(" 请填写运单编号 ");
             $("[name=txtLogisticsClone0]").focus();
             $("#btnSubmit").removeClass("disabled").attr("disabled", false);
             return;
@@ -61,39 +61,38 @@
             success: function (responseData) {
 
                 if (responseData == "1") {
-                    Show("发货成功！", "success");
+                    Show(" 发货成功！", "success");
                     location.reload();
                 } else {
-                    Show("发货失败", "prompt");
+                    Show(" 发货失败 ", "prompt");
                 }
             }
         });
     });
 
-    //注入批量文件发货按钮
     $(function(){
 
-        //导出待发货订单按钮
-        var exportButton="";
+        // 导出待发货订单按钮
+         var exportButton="";
         exportButton += '<a class="btn btn-small fun-a" id="ExportAndSend" href="javascript:void(0)" onclick="exportDialog();" style="color: #de533c;">';
-        exportButton += '<i class="icon-down-gray"/>导出待发货订单';
+        exportButton += '<i class="icon-down-gray"/> 导出待发货订单';
         exportButton += '</a>';
 
         // 导入发货文件按钮
-        var importButton="";
+         var importButton="";
         importButton += '<a class="btn btn-small fun-a" id="ImportAndSend" href="javascript:void(0)" onclick="importDialog();" style="color: #de533c;">';
-        importButton += '<i class="icon-turn-gray"/>导入物流信息';
+        importButton += '<i class="icon-turn-gray"/> 导入物流信息';
         importButton += '</a>';
 
         var argetDiv = $("#myTabContent").find("div[class='con style0list']");
 
         // 注入导入发货文件按钮
-        argetDiv.prepend(importButton);
-         //注入导出代发货订单按钮
-        argetDiv.prepend(exportButton);
+         argetDiv.prepend(importButton);
+         // 注入导出代发货订单按钮
+         argetDiv.prepend(exportButton);
 
         // 注入消息弹层
-        var alertDiv = "";
+         var alertDiv = "";
         alertDiv += '<div class="alert hide" id="importAlertDiv">';
         alertDiv += '<button data-dismiss="alert" class="close" type="button">×</button>';
         alertDiv += '</div>';
@@ -102,7 +101,7 @@
     });
 
     // 注入导出订单弹层
-     unsafeWindow.exportDialog = function(){
+      unsafeWindow.exportDialog = function(){
 
          $("#exportDialogDiv").remove();
 
@@ -120,11 +119,11 @@
          dialogDiv += '<label class="control-label" for="inputPassword"><span class="color-red"></span> 成交时间: </label>';
          dialogDiv += '<div class="controls">';
 
-         dialogDiv += '<input type="text" id="exportstartDate" class="input-medium" placeholder="请选择开始日期" onclick="WdatePicker({ dateFmt: ';
+         dialogDiv += '<input type="text" id="exportstartDate" class="input-medium" placeholder="请选择开始日期" onclick="WdatePicker ({ dateFmt: ';
          dialogDiv += "'yyyy-MM-dd HH:mm:ss'";
          dialogDiv += ' })">';
          dialogDiv += '<label class="mlr5">-</label>';
-         dialogDiv += '<input type="text" id="exportendDate" class="input-medium" placeholder="请选择结束日期" onclick="WdatePicker({ dateFmt: ';
+         dialogDiv += '<input type="text" id="exportendDate" class="input-medium" placeholder="请选择结束日期" onclick="WdatePicker ({ dateFmt: ';
          dialogDiv += "'yyyy-MM-dd HH:mm:ss'";
          dialogDiv += '})">';
 
@@ -136,7 +135,7 @@
 
          dialogDiv += '<div class="modal-footer">';
          dialogDiv += '<button class="btn" data-dismiss="modal" aria-hidden="true"> 关闭 </button>';
-         dialogDiv += '<button class="btn btn-info" id="btnExportSubmit" onclick="exportDownload();" id=""> 导出 </button>';
+         dialogDiv += '<button class="btn btn-info" id="btnExportSubmit" onclick="exportDownload ();" id=""> 导出 </button>';
          dialogDiv += '</div>';
          dialogDiv += '</div>';
 
@@ -147,7 +146,7 @@
 
 
     // 注入导入文件弹层
-     unsafeWindow.importDialog = function(){
+      unsafeWindow.importDialog = function(){
 
         $("#importDialogDiv").remove();
 
@@ -182,7 +181,7 @@
 
         dialogDiv += '<div class="modal-footer">';
         dialogDiv += '<button class="btn" data-dismiss="modal" aria-hidden="true"> 关闭 </button>';
-        dialogDiv += '<button class="btn btn-info" id="btnImportSubmit" disabled = “true” onclick="importDelivery();" id=""> 导入 </button>';
+        dialogDiv += '<button class="btn btn-info" id="btnImportSubmit" disabled = “true” onclick="importDelivery ();" id=""> 导入 </button>';
         dialogDiv += '</div>';
         dialogDiv += '</div>';
 
@@ -193,39 +192,126 @@
 
 
 
-    //导出订单
-    unsafeWindow.exportDownload = function(){
+    // 导出订单
+     unsafeWindow.exportDownload = function(){
 
         $('#exportDialogDiv').modal('hide');
 
         var orderTime = new Array("","");
-        orderTime[0] = $("#exportstartDate").val();//开始时间
-        orderTime[1] = $("#exportendDate").val();//结束时间
+        orderTime[0] = $("#exportstartDate").val();// 开始时间
+        orderTime[1] = $("#exportendDate").val();// 结束时间
 
-         $.ajax({
+          $.ajax({
              url: '../../OrderForm/OrderImports?orderType=dfh&expType=.csv&beginTime='+orderTime[0] + '&endTime=' + orderTime[1] + '&source=&exportField=&importFlag=',
              type: "GET",
              async: true
         }).done(function( responseData ) {
-             //console.log(responseData);
+
+             //console.log(JSON.stringify(responseData));
 
              var new_csv = new CSV(responseData).parse();
+              var tmpitem = 0;
+              var ordernum="";
+              var orderprice = 0;
 
-             for(var item in new_csv){
-                 //去除订单编号单引号
+              $.each(new_csv,function(key, item) {
+                  item[0] = item[0].replace("'","");
+
+                  if(key >0){
+                      item[7] = Number(item[7]);
+                      item[8] = Number(item[8]);
+                      item[9] = Number(item[9]);
+                      item[10] = Number(item[10]);
+                      item[11] = Number(item[11]);
+                      item[12] = Number(item[12]);
+                      item[18] = Number(item[18]);
+                      if(key == 1){
+                         orderprice = orderprice + Number(item[10]);
+                         tmpitem = key;
+                         ordernum = item[0];
+                      }else{
+                         if(ordernum == item[0]){
+                             orderprice = orderprice + Number(item[10]);
+                         }else{
+                             for(var num = tmpitem;num<key;num++){
+                                 new_csv[num][12] = orderprice;
+                                 var tmp10 = Number(new_csv[num][10]);
+                                 new_csv[num][9] = (tmp10/orderprice)*(orderprice-Number(new_csv[num][18]));
+                                 new_csv[num][29] = tmp10-Number(new_csv[num][9]);
+                             }
+                             orderprice = Number(item[10]);
+                             tmpitem = key;
+                             ordernum = item[0];
+                         }
+                         if(key == new_csv.length-1){
+                             for(var num2 = tmpitem;num2<key+1;num2++){
+                                 new_csv[num][12] = orderprice;
+                                 var tmp210 = Number(new_csv[num][10]);
+                                 new_csv[num][9] = (tmp210/orderprice)*(orderprice-Number(new_csv[num][18]));
+                                 new_csv[num][29] = tmp210-Number(new_csv[num][9]);
+                             }
+                         }
+                     }
+                 }
+
+                 // 分割条码和 SKU 编码
+                 var temp =item[5].split("_");
+                 if(temp.length > 1){
+                     item[28] = item[5].split("_")[0];
+                     item[5] = item[5].split("_")[1];
+                 }
+                 else{
+                     item[28] = "条码";
+                     item[29] = "优惠后单价";
+                 }
+              });
+
+             /*for(var item in new_csv){
+                 // 去除订单编号单引号
                  new_csv[item][0] = new_csv[item][0].replace("'","");
+                 console.log(tmpitem);
+                 console.log(ordernum);
+                 console.log(orderprice);
+                 console.log("-----");
+                 if(item >0){
+                     if(item == 1){
+                         orderprice = orderprice + Number(new_csv[item][10]);
+                         tmpitem = item;
+                         ordernum = new_csv[item][0];
+                     }else{
+                         if(ordernum == new_csv[item][0]){
+                             orderprice = orderprice + Number(new_csv[item][10]);
+                         }else{
+                             for(var num = tmpitem;num<item;num++){
+                                 new_csv[num][10] = orderprice;
+                             }
+                             orderprice = Number(new_csv[item][10]);
+                             tmpitem = item;
+                             ordernum = new_csv[item][0];
+                         }
+                         if(item == new_csv.length-1){
+                             console.log(item + "--" + tmpitem);
+                             for(var num2 = tmpitem;num2<item+1;num2++){
+                                 new_csv[num2][10] = orderprice;
+                             }
+                         }
+                     }
+                 }
 
-                 //分割条码和SKU编码
-                 var temp =new_csv[item][5].split("_");
+                 // 分割条码和 SKU 编码
+                  var temp =new_csv[item][5].split("_");
                  if(temp.length > 1){
                      new_csv[item][28] = new_csv[item][5].split("_")[0];
                      new_csv[item][5] = new_csv[item][5].split("_")[1];
                  }
                  else{
-                     new_csv[item][28] = "条码";
+                     new_csv[item][28] = " 条码 ";
                  }
 
-             }
+
+
+             }*/
+
              //console.log(new_csv);
 
              var new_ws = XLSX.utils.aoa_to_sheet(new_csv);
@@ -235,26 +321,26 @@
              XLSX.utils.book_append_sheet(new_wb, new_ws, 'SheetJS');
 
              /* write file and trigger a download */
-             XLSX.writeFile(new_wb, '待发货订单'+ new Date().getTime() +'.xlsx', {bookSST:true});
+            XLSX.writeFile(new_wb, '待发货订单'+ new Date().getTime() +'.xlsx', {bookSST:true});
 
         });
     };
 
-    //处理excel文件
-    unsafeWindow.importExcel = function(obj){
+    // 处理 excel 文件
+     unsafeWindow.importExcel = function(obj){
         if (!obj.files) {
-            alert('没有获取到Excel文件数据!');
+            alert(' 没有获取到 Excel 文件数据！');
             return;
         }
         var reader = new FileReader();
         reader.readAsBinaryString(obj.files[0], "gbk");// 读取文件
-        reader.onload = function (e) {
+         reader.onload = function (e) {
             var data = e.target.result;
             var wb = XLSX.read(data, {
                 type: 'binary'
             });
-            //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
-            //wb.Sheets[Sheet名]获取第一个Sheet的数据
+            //wb.SheetNames [0] 是获取 Sheets 中第一个 Sheet 的名字
+             //wb.Sheets [Sheet 名] 获取第一个 Sheet 的数据
             excelData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             //console.log(excelData);
 
@@ -264,43 +350,39 @@
     };
 
     // 导入发货
-     unsafeWindow.importDelivery = function(){
+      unsafeWindow.importDelivery = function(){
 
         if(excelData == ""){
-            alert('没有获取到Excel文件数据!');
+            alert(' 没有获取到 Excel 文件数据！');
             return;
         }
 
         $('#importDialogDiv').modal('hide');
 
         // 发货
-        var orderSendList = $.parseJSON('{"OrderSendLists":[{"OrderNumber":null,"ParcelNo":null}],"ExpressCode":null,"ExpressName":null,"ExpressID":null,"User":null}');
-
-        //打印克隆
-        var newList = clone(orderSendList);
-        // 发货克隆
-        var newList1 = clone(orderSendList);
+         var orderSendList = $.parseJSON('{"OrderSendLists":[{"OrderNumber":null,"ParcelNo":null}],"ExpressCode":null,"ExpressName":null,"ExpressID":null,"User":null}');
+        // 克隆
+         var newList1 = clone(orderSendList);
         var newList2 = clone(orderSendList);
         var newList3 = clone(orderSendList);
         var newList4 = clone(orderSendList);
         // 调用克隆的方法
-        newList.OrderSendLists = new Array();
-        newList1.OrderSendLists = new Array();
+         newList1.OrderSendLists = new Array();
         newList2.OrderSendLists = new Array();
         newList3.OrderSendLists = new Array();
         newList4.OrderSendLists = new Array();
 
         newList1.ExpressID = "45";
         newList1.ExpressCode = "STO";
-        newList1.ExpressName = " 申通e物流 ";
+        newList1.ExpressName = "申通 e 物流";
 
         newList2.ExpressID = "25";
         newList2.ExpressCode = "POSTB";
-        newList2.ExpressName = " 邮政国内小包 ";
+        newList2.ExpressName = "邮政国内小包";
 
         newList3.ExpressID = "76";
         newList3.ExpressCode = "YTO";
-        newList3.ExpressName = " 圆通速递 ";
+        newList3.ExpressName = "圆通速递";
 
         newList4.ExpressID = "77";
         newList4.ExpressCode = "YDKY";
@@ -313,9 +395,9 @@
         for(var item in excelData){
             if(isRun){
                 //console.log(excelData[item]);
-                var orderNumber = excelData[item]. __EMPTY;
+                var orderNumber = excelData[item].__EMPTY_1;
                 var expressName = excelData[item].__EMPTY_5;
-                var parcelNo = excelData[item].__EMPTY_8;
+                var parcelNo = excelData[item].__EMPTY_9;
                 orderNumber = orderNumber.toString().replace(/^\s+|\s+$/g,"");
                 expressName = expressName.toString().replace(/^\s+|\s+$/g,"");
                 parcelNo = parcelNo.toString().replace(/^\s+|\s+$/g,"");
@@ -325,7 +407,7 @@
                 newListChildren.ParcelNo = parcelNo;
 
                 // 判断重复订单数据不处理
-                if((JSON.stringify(newList1.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList2.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList3.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList4.OrderSendLists)).indexOf(orderNumber) != -1){
+                 if((JSON.stringify(newList1.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList2.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList3.OrderSendLists)).indexOf(orderNumber) != -1 || (JSON.stringify(newList4.OrderSendLists)).indexOf(orderNumber) != -1){
                     continue;
                 }
 
@@ -344,16 +426,16 @@
                 }
             }
 
-            //判断正式数据是否开始
-            if(excelData[item].订单信息=="行号"){
+            // 判断正式数据是否开始
+             if(excelData[item].订单信息 =="行号"){
                 isRun = true;
             }
         }
 
-        /*console.log(newList1);
-        console.log(newList2);
-        console.log(newList3);
-        console.log(newList4);*/
+        //console.log(newList1);
+        //console.log(newList2);
+        //console.log(newList3);
+        //console.log(newList4);
 
         // 提交数据
         if(newList1.OrderSendLists.length > 0){
@@ -383,7 +465,7 @@
     };
 
     // 提交发货信息
-     unsafeWindow.submitDelivery = function(delivery,newList){
+      unsafeWindow.submitDelivery = function(delivery,newList){
 
         var importd = dialog({content: '数据导入中......'}).show();
 
@@ -392,13 +474,13 @@
             url: "../../OrderForm/BatchSaveCourier",
             data: { "SaveCourier": JSON.stringify(newList) },
             dataType: "json",
-            async: false, // 让它同步执行
-            success: function (jsonRes) {
-                //console.log("222--" + jsonRes);
+            //async: false, // 让它同步执行
+              success: function (jsonRes) {
+                //console.log("222--" + jsonRes.Message);
                 if (jsonRes.Code == null && jsonRes.Message == null) {
                     //console.log("111--" + jsonRes);
                     if (jsonRes == "-3") {
-                        importShow(delivery + "-" + " 导入发货失败 ", "error");
+                        importShow(delivery + "-" + "导入发货失败", "error");
                         importd.close().remove();
                         return false;
                     }else{
@@ -408,24 +490,24 @@
                             data: { "batchSend": JSON.stringify(newList) },
                             dataType: "json",
                             //async: false, // 让它同步执行
-                             success: function (jsonRes) {
+                              success: function (jsonRes) {
                                 //console.log("000--" + jsonRes);
                                 if (jsonRes.Code == null && jsonRes.Message == null) {
                                     if (jsonRes == "-1") {
-                                        importShow(delivery + "-" + " 导入发货成功 ", "success");
+                                        importShow(delivery + "-" + "导入发货成功", "success");
                                         importd.close().remove();
                                         // 重新加载列表
-                                         OrderView(1);
+                                          OrderView(1);
                                         return true;
                                     } else {
-                                        importShow(delivery + "-" + " 导入发货失败 ", "error");
+                                        importShow(delivery + "-" + "导入发货失败", "error");
                                         importd.close().remove();
                                         return false;
 
                                     }
                                 }
                                 else {
-                                    importShow(delivery + "-" + jsonRes.Message + "- 请检查订单号是否有错误 ", "error");
+                                    importShow(delivery + "-" + jsonRes.Message + "-请检查订单号是否有错误", "error");
                                     importd.close().remove();
                                     return false;
                                 }
@@ -434,7 +516,7 @@
                     }
                 }
                 else {
-                    importShow(delivery + "-" + jsonRes.Message + "- 请检查订单号是否有错误 ", "error");
+                    importShow(delivery + "-" + jsonRes.Message + "-请检查订单号是否有错误", "error");
                     importd.close().remove();
                     return false;
                 }
@@ -444,7 +526,7 @@
     };
 
     // 提示
-     unsafeWindow.importShow = function(text, type) {
+      unsafeWindow.importShow = function(text, type) {
         var stext = "";
         if (type == "success") {
             stext = '<span style="color: #468847;">' + text + '！</span>&nbsp;';
