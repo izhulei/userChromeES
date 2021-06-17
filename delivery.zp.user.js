@@ -237,7 +237,7 @@
                                  new_csv[num][12] = orderprice;
                                  var tmp10 = Number(new_csv[num][10]);
                                  new_csv[num][9] = (tmp10/orderprice)*(orderprice-Number(new_csv[num][18]));
-                                 new_csv[num][29] = tmp10-Number(new_csv[num][9]);
+                                 new_csv[num][29] = (tmp10-Number(new_csv[num][9]))/Number(new_csv[num][8]);
                              }
                              orderprice = Number(item[10]);
                              tmpitem = key;
@@ -248,7 +248,7 @@
                                  new_csv[num][12] = orderprice;
                                  var tmp210 = Number(new_csv[num][10]);
                                  new_csv[num][9] = (tmp210/orderprice)*(orderprice-Number(new_csv[num][18]));
-                                 new_csv[num][29] = tmp210-Number(new_csv[num][9]);
+                                 new_csv[num][29] = (tmp10-Number(new_csv[num][9]))/Number(new_csv[num][8]);
                              }
                          }
                      }
@@ -538,5 +538,4 @@
         $("#importAlertDiv").show();
         //setTimeout($(".alert").hide(), 5000);
     };
-
 })();
